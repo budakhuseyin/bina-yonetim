@@ -7,6 +7,19 @@ import sys
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+
+    # --- AUTO CREATE ADMIN (SIMPLE METHOD) ---
+    if os.environ.get("AUTO_CREATE_ADMIN") == "true":
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        if not User.objects.filter(username="huseyin").exists():
+            User.objects.create_superuser(
+                "huseyin",
+                "huseyin@example.com",
+                "huseyin"
+            )
+            print(">> ADMIN CREATED: huseyin / huseyin")
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -15,6 +28,7 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+
     execute_from_command_line(sys.argv)
 
 
