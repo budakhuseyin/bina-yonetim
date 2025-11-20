@@ -3,5 +3,5 @@ services:
     name: bina-yonetim
     env: python
     plan: free
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    buildCommand: "pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput"
     startCommand: "gunicorn config.wsgi:application"
