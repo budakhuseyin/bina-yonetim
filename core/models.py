@@ -26,7 +26,8 @@ class User(AbstractUser):
     apartment_number = models.CharField(max_length=10, default="0")
 
     approved = models.BooleanField(default=False)
-    REQUIRED_FIELDS = ['email']
+
+    REQUIRED_FIELDS = []     # 🔥 BUNU BOŞ BIRAK — SORUNU ÇÖZÜYOR
 
     def save(self, *args, **kwargs):
         if not self.username and self.email:
