@@ -1,0 +1,479 @@
+:root{
+  --bg:#0b1020;
+  --panel:#11162a;
+  --muted:#a9b0c6;
+  --text:#e7ecff;
+  --brand:#4f7cff;
+  --line:#21263c;
+  --good:#1fbb78;
+  --bad:#f35d5d;
+  --chip:#2a3254;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; display:flex; background:var(--bg); color:var(--text);
+  font: 500 15px/1.45 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+}
+
+/* Sidebar */
+.sidebar{
+  width: 280px; border-right:1px solid var(--line); background:var(--panel);
+  padding: 18px 14px; position:sticky; top:0; height:100vh;
+}
+.brand{display:flex; gap:12px; align-items:center; padding:8px 10px 18px}
+.logo{width:36px; height:36px; display:grid; place-items:center; background:#182041; border-radius:12px}
+.brand-text span{display:block; color:var(--muted); font-size:12px; margin-top:2px}
+
+.menu{display:flex; flex-direction:column; gap:6px; margin-top:8px}
+.menu-item{
+  all:unset; display:flex; gap:10px; align-items:center; padding:12px 12px;
+  border-radius:12px; cursor:pointer; color:var(--text)
+}
+.menu-item:hover{ background:#151c36}
+.menu-item.active{ background:#1a2142; outline:1px solid #2a3570 }
+
+/* Page & Topbar */
+.page{ flex:1; display:flex; flex-direction:column; min-width:0 }
+.topbar{
+  display:flex; align-items:center; gap:10px; padding:14px 18px;
+  border-bottom:1px solid var(--line); background:#0c1329;
+}
+.building-badge{ background:#19224a; color:#aecdff; border:1px solid #2c3a74; padding:8px 10px; border-radius:10px }
+.spacer{ flex:1 }
+.user{display:flex; align-items:center; gap:12px}
+.name-mail .mail{ color:var(--muted); font-size:12px }
+.avatar{ width:34px; height:34px; border-radius:50%; display:grid; place-items:center; background:#2a3570 }
+.ghost{ all:unset; color:#c8d2ff; padding:8px 10px; border-radius:8px; cursor:pointer }
+.ghost.small{ padding:6px 8px; font-size:13px }
+.ghost:hover{ background:#16204a }
+
+/* Views */
+.view{ display:none; padding:22px; }
+.view.show{ display:block }
+.view h1{ margin:6px 0 4px }
+.subtitle{ color:var(--muted); margin:0 0 18px }
+
+/* Cards */
+.cards{
+  display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:14px;
+}
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:16px;
+  padding:16px 16px 14px; min-height:110px;
+}
+.card-title{ color:#c2c9e8; font-size:14px; margin-bottom:8px }
+.card-value{ font-size:28px; font-weight:800; letter-spacing:0.2px }
+.trend{ margin-top:6px; font-weight:700; font-size:13px }
+.trend.up{ color:var(--good) }
+.trend.down{ color:var(--bad) }
+.card .link{ display:inline-block; margin-top:8px; color:#9eb7ff; cursor:pointer }
+.card .link:hover{ text-decoration:underline }
+
+/* Panels */
+.grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:14px }
+.panel{
+  background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:14px;
+}
+.panel-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px }
+.panel h3{ margin:0 }
+.list{ display:flex; flex-direction:column; gap:10px }
+.list-item{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 10px; border-radius:12px; background:#0e1631; border:1px solid #1b2241;
+}
+.row{ display:flex; gap:10px; align-items:center }
+.badge{ font-size:12px; padding:4px 8px; border-radius:999px; background:var(--chip); color:#c9d5ff }
+.badge.ok{ background:#143d2c; color:#66e2a5 }
+.badge.pending{ background:#3b2b14; color:#ffce8a }
+.badge.high{ background:#411a1a; color:#ff9e9e }
+.badge.medium{ background:#32264a; color:#cab8ff }
+.badge.low{ background:#22343a; color:#90e6d2 }
+
+/* Table (approvals) */
+.table{ background:var(--panel); border:1px solid var(--line); border-radius:16px; overflow:hidden }
+.table .thead, .table .trow{
+  display:grid; grid-template-columns: 2fr 2fr 1.2fr 1.2fr 1.2fr; gap:10px;
+  padding:12px 14px;
+}
+.table .thead{ background:#0f1836; color:#c2c9e8; font-weight:700 }
+.table .trow{ border-top:1px solid var(--line) }
+.actions{ display:flex; gap:8px; }
+.btn{
+  all:unset; cursor:pointer; border-radius:10px; padding:8px 10px; font-weight:700;
+  border:1px solid #2a3570; background:#121a3a; color:#cfe0ff;
+}
+.btn.approve{ border-color:#1e6b46; background:#0f2a20; color:#82f1bf }
+.btn.reject{ border-color:#6b1e1e; background:#2a0f0f; color:#ffb3b3 }
+
+/* Responsive */
+@media (max-width:1100px){
+  .cards{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .grid-2{ grid-template-columns: 1fr; }
+}
+@media (max-width:860px){
+  .sidebar{ display:none }
+  .topbar{ position:sticky; top:0; z-index:2 }
+}
+
+/* === Member Approvals: durum mesajları ve geçici stiller === */
+.loading, .empty, .error {
+  padding: 16px;
+  text-align: center;
+  font-style: italic;
+  opacity: 0.8;
+  border-top: 1px solid var(--line);
+}
+
+.loading { color: var(--muted); }
+.empty { color: var(--good); }
+.error { color: var(--bad); }
+
+.trow[style*="opacity"] {
+  transition: opacity 0.3s ease;
+}
+
+.btn.approve[disabled],
+.btn.reject[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== Income & Expenses Modern Design ===== */
+.finance-cards {
+  margin-bottom: 24px;
+}
+.finance-cards .card {
+  text-align: center;
+  padding: 20px 10px;
+}
+.income-card .card-value { color: #16e07b; }
+.expense-card .card-value { color: #ff7070; }
+.balance-card .card-value { color: #4fa3ff; }
+
+.transaction-form-box {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.transaction-form-box h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  color: #c7d3ff;
+}
+
+.transaction-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.transaction-form select,
+.transaction-form input {
+  background: #121831;
+  border: 1px solid #2a3570;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 6px;
+  flex: 1;
+  min-width: 120px;
+}
+.transaction-form .check {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.transaction-form button {
+  background: #4f7cff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.transaction-form button:hover {
+  background: #375ae8;
+}
+
+.transactions-panel {
+  margin-top: 10px;
+}
+.transactions-panel table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #e8ebff;
+}
+.transactions-panel th, .transactions-panel td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #252a45;
+  text-align: left;
+}
+.transactions-panel th {
+  color: #8fa3ff;
+  background: #101530;
+}
+.transactions-panel td:last-child {
+  text-align: right;
+}
+.transactions-panel tbody tr:hover {
+  background: #141c3f;
+}
+
+/* ===================================================
+   🏢 ANNOUNCEMENTS SECTION - ApartmentHub Manager Panel
+   =================================================== */
+
+/* === Genel Panel Stili === */
+#view-announcements .panel {
+  background: #0f172a;
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 25px;
+  border: 1px solid #1e293b;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* === Başlıklar === */
+#view-announcements h1 {
+  color: #f8fafc;
+  margin-bottom: 8px;
+}
+
+#view-announcements .subtitle {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+/* === Form Tasarımı === */
+#announcementForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+#announcementForm input,
+#announcementForm textarea,
+#announcementForm select {
+  background: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+#announcementForm input:focus,
+#announcementForm textarea:focus,
+#announcementForm select:focus {
+  border-color: #3b82f6;
+  background: #0f172a;
+  outline: none;
+}
+
+#announcementForm textarea {
+  flex: 1;
+  min-height: 60px;
+  resize: vertical;
+}
+
+#announcementForm button {
+  background: #3b82f6;
+  border: none;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+#announcementForm button:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+/* === Liste Alanı === */
+#announcementsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* === Her bir duyuru kartı === */
+#announcementsList .list-item {
+  display: block; /* 🔹 önemli — global flex'i ezer */
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 15px 20px;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  overflow: hidden;
+  max-height: 110px;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+#announcementsList .list-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+/* === Başlık ve Tarih Satırı === */
+#announcementsList .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#announcementsList strong {
+  font-size: 1rem;
+  color: #f1f5f9;
+}
+
+#announcementsList small {
+  color: #94a3b8;
+}
+
+/* === Duyuru Mesajı === */
+#announcementsList p {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #cbd5e1;
+  max-height: 50px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* === Önem Seviyeleri === */
+.badge.high {
+  background: #dc2626;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.badge.medium {
+  background: #facc15;
+  color: #000;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.badge.low {
+  background: #16a34a;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+/* === Boş Liste veya Hata Durumu === */
+#announcementsList .error {
+  color: #f87171;
+  text-align: center;
+  font-weight: 500;
+}
+
+#announcementsList .empty {
+  color: #94a3b8;
+  text-align: center;
+  font-style: italic;
+}
+
+/* === Kart Büyütme Efekti === */
+#announcementsList .list-item.expanded {
+  background: #0f172a;
+  transform: scale(1.05);
+  z-index: 5;
+  position: relative;
+  max-height: 400px;              /* 📏 kartın genel yüksekliği */
+  overflow-y: auto;               /* 🧭 kartın içinde dikey scroll */
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
+  scrollbar-width: thin;          /* Firefox için */
+  scrollbar-color: #3b82f6 #1e293b; /* Kaydırma çubuğu rengi */
+}
+
+/* 💅 WebKit (Chrome, Edge) scrollbar tasarımı */
+#announcementsList .list-item.expanded::-webkit-scrollbar {
+  width: 6px;
+}
+#announcementsList .list-item.expanded::-webkit-scrollbar-thumb {
+  background-color: #3b82f6;
+  border-radius: 4px;
+}
+#announcementsList .list-item.expanded::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+
+#announcementsList .list-item.expanded p {
+  white-space: normal;
+  overflow: visible;
+  max-height: none;
+}
+
+#announcementsList .list-item.expanded strong {
+  color: #60a5fa;
+}
+
+/* === Duyuru düzenleme & silme butonları === */
+#announcementsList .actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#announcementsList .actions button {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #9ca3af; /* gri mavi ton */
+  transition: all 0.2s ease;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+/* Hover efekti — parlak renk + büyüme */
+#announcementsList .actions button:hover {
+  transform: scale(1.25);
+}
+
+/* ✏️ düzenleme ikonu */
+#announcementsList .btn-edit:hover {
+  color: #3b82f6; /* mavi */
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* 🗑️ silme ikonu */
+#announcementsList .btn-delete:hover {
+  color: #ef4444; /* kırmızı */
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
