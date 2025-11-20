@@ -130,21 +130,17 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # -----------------------------------------
-# AUTO CREATE SUPERUSER ON FIRST DEPLOY
+# AUTO CREATE SUPERUSER (Render FREE fix)
 # -----------------------------------------
-import django
-from django.contrib.auth import get_user_model
+# This block will run ONLY IF AUTO_CREATE_ADMIN=true in ENV
 
 if os.environ.get("AUTO_CREATE_ADMIN") == "true":
-    try:
-        django.setup()
-        User = get_user_model()
-        if not User.objects.filter(username="huseyin").exists():
-            User.objects.create_superuser(
-                username="huseyin",
-                email="huseyin@example.com",
-                password="huseyin"
-            )
-            print(">> SUPERUSER CREATED: huseyin / huseyin")
-    except Exception as e:
-        print("AUTO CREATE ADMIN ERROR:", e)
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    if not User.objects.filter(username="huseyin").exists():
+        User.objects.create_superuser(
+            username="huseyin",
+            email="huseyin@example.com",
+            password="huseyin"
+        )
+        print(">> SUPERUSER CREATED: huseyin / huseyin")
