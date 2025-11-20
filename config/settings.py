@@ -11,7 +11,7 @@ SECRET_KEY = 'django-insecure-js-)idw09l+73^yxc=@ks@tff7ll*mzk$@uzzo5y_kq3a4rdru
 # DEBUG / ALLOWED HOSTS
 # --------------------------
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
-ALLOWED_HOSTS = ['*']   # Render için açtık
+ALLOWED_HOSTS = ['*']
 
 # --------------------------
 # UYGULAMALAR
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',   # 🔥 eklendi
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,7 +49,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
-
 
 TEMPLATES = [
     {
@@ -123,9 +122,29 @@ USE_TZ = True
 # STATIC FILES
 # --------------------------
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # local
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')    # production
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# -----------------------------------------
+# AUTO CREATE SUPERUSER ON FIRST DEPLOY
+# -----------------------------------------
+import django
+from django.contrib.auth import get_user_model
+
+if os.environ.get("AUTO_CREATE_ADMIN") == "true":
+    try:
+        django.setup()
+        User = get_user_model()
+        if not User.objects.filter(username="huseyin").exists():
+            User.objects.create_superuser(
+                username="huseyin",
+                email="huseyin@example.com",
+                password="huseyin"
+            )
+            print(">> SUPERUSER CREATED: huseyin / huseyin")
+    except Exception as e:
+        print("AUTO CREATE ADMIN ERROR:", e)
