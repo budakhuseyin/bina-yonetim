@@ -323,21 +323,79 @@ async function renderMembers() {
   }
 }
 
+// dashboard_manager.js içindeki showMemberDetail fonksiyonunu bununla değiştir:
+
 async function showMemberDetail(id) {
   const detailBox = qs("#memberDetail");
-  detailBox.innerHTML = "<div class='loading'>Yükleniyor...</div>";
+  detailBox.innerHTML = "<div class='loading'>Üye bilgileri yükleniyor...</div>";
 
   try {
     const res = await fetch(API.memberDetail(id), { headers: authHeaders() });
     if (!res.ok) throw new Error("detail fail");
     const data = await res.json();
 
+    // Tarih formatlayıcı
+    const formatDate = (dateStr) => {
+        if(!dateStr) return "-";
+        return new Date(dateStr).toLocaleDateString("tr-TR");
+    };
+
+    // Ödemeler HTML'i
+    let paymentsHtml = `<p class="empty small">Henüz ödeme kaydı yok.</p>`;
+    if (data.aidat_bilgileri && data.aidat_bilgileri.length > 0) {
+        paymentsHtml = `
+        <table class="mini-table">
+            <thead>
+                <tr>
+                    <th>Dönem</th>
+                    <th>Ödeme Tarihi</th>
+                    <th class="text-right">Tutar</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${data.aidat_bilgileri.map(p => `
+                    <tr>
+                        <td>${formatDate(p.month).slice(3)}</td> <td>${formatDate(p.paid_date)}</td>
+                        <td class="text-right success-text">₺${p.amount}</td>
+                    </tr>
+                `).join("")}
+            </tbody>
+        </table>`;
+    }
+
+    // Ana HTML
     detailBox.innerHTML = `
-      <h3>${data.first_name} ${data.last_name}</h3>
-      <p><strong>E-posta:</strong> ${data.email}</p>
-      <p><strong>Rol:</strong> ${data.role}</p>
-      <p><strong>Onay:</strong> ${data.approved ? "✅" : "⏳"}</p>
-      <p><strong>Bina:</strong> ${data.building || "-"}</p>
+      <div class="user-header">
+         <div class="avatar large">${data.first_name[0] || "U"}${data.last_name[0] || ""}</div>
+         <div>
+            <h3>${data.first_name} ${data.last_name}</h3>
+            <span class="badge ${data.role === 'manager' ? 'high' : 'low'}">${data.role}</span>
+         </div>
+      </div>
+
+      <div class="detail-grid">
+         <div class="detail-item">
+            <label>E-posta</label>
+            <span>${data.email}</span>
+         </div>
+         <div class="detail-item">
+            <label>Telefon</label>
+            <span>${data.phone || "-"}</span>
+         </div>
+         <div class="detail-item">
+            <label>Daire No</label>
+            <span>${data.apartment_number}</span>
+         </div>
+         <div class="detail-item">
+            <label>Kayıt Tarihi</label>
+            <span>${formatDate(data.date_joined)}</span>
+         </div>
+      </div>
+
+      <hr class="divider">
+      
+      <h4>Son Ödemeler</h4>
+      ${paymentsHtml}
     `;
   } catch(e) {
     console.error(e);

@@ -152,6 +152,9 @@ def list_members(request):
 # =========================================
 # 🔹 Tek bir üyenin detayını görüntüleme
 # =========================================
+
+# core/views.py içindeki member_detail fonksiyonunu bununla değiştir:
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def member_detail(request, user_id):
@@ -164,6 +167,18 @@ def member_detail(request, user_id):
     except User.DoesNotExist:
         return Response({"detail": "Kullanıcı bulunamadı."}, status=404)
 
+    # Üyenin ödenmiş aidatlarını çek (Son 10 tanesi)
+    paid_dues = Due.objects.filter(user=member, status='paid').order_by('-paid_date')[:10]
+    
+    payments_data = [
+        {
+            "amount": d.amount,
+            "month": d.month, # Hangi ayın aidatı
+            "paid_date": d.paid_date, # Ne zaman ödedi
+        }
+        for d in paid_dues
+    ]
+
     data = {
         "id": member.id,
         "email": member.email,
@@ -171,8 +186,11 @@ def member_detail(request, user_id):
         "last_name": member.last_name,
         "role": member.role,
         "approved": member.approved,
+        "phone": member.phone,                 # <--- YENİ
+        "apartment_number": member.apartment_number, # <--- YENİ
+        "date_joined": member.date_joined,     # <--- YENİ
         "building": member.building.name if member.building else None,
-        "aidat_bilgileri": [],  # 🔹 Şimdilik boş — ileride buraya aidat tablosu eklenecek
+        "aidat_bilgileri": payments_data,      # <--- DOLU LİSTE
     }
     return Response(data, status=200)
 

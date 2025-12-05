@@ -545,3 +545,72 @@ body{
   text-decoration: underline;
   color: #7093ff;
 }
+
+/* --- ÜYE DETAYLARI MODERN GÖRÜNÜM --- */
+
+.user-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.avatar.large {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    background: #3b82f6;
+    color: white;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.detail-item label {
+    display: block;
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+
+.detail-item span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #e2e8f0;
+}
+
+.divider {
+    border: 0;
+    border-top: 1px solid #334155;
+    margin: 15px 0;
+}
+
+/* Mini Tablo (Ödemeler İçin) */
+.mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.mini-table th {
+    text-align: left;
+    color: #94a3b8;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #334155;
+    font-weight: normal;
+}
+
+.mini-table td {
+    padding: 8px 0;
+    border-bottom: 1px solid #1e293b;
+    color: #cbd5e1;
+}
+
+.text-right { text-align: right; }
+.success-text { color: #4ade80; font-weight: bold; }
+.empty.small { font-style: italic; color: #64748b; font-size: 13px; }
