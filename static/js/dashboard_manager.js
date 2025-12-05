@@ -646,33 +646,50 @@ function bindFeesActions() {
   btn.addEventListener("click", createMonthlyDues);
 }
 
+// AİDAT OLUŞTURMA FONKSİYONU
 async function createMonthlyDues() {
   const month = qs("#dueMonth").value;
   const amount = qs("#dueAmount").value;
   const due_date = qs("#dueDate").value;
-  const due_type = qs("#dueType").value;
+  
+  // HATA BURADAYDI: Seçilen dropdown değerini alıyoruz
+  const due_type = qs("#dueType").value; 
 
   if (!month || !amount || !due_date) {
     alert("Ay / tutar / son tarih zorunlu.");
     return;
   }
 
-  const res = await fetch(API.createMonthlyDues, {
-    method: "POST",
-    headers: authHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({
-      month,
-      amount,
-      due_date,
-      type: due_type
-    })
-  });
+  const btn = qs("#createDueBtn");
+  btn.disabled = true;
+  btn.textContent = "İşleniyor...";
 
-  if (res.ok) {
-    alert("Aidatlar / Ücretler oluşturuldu!");
-    loadManagerDues();
-  } else {
-    alert("Oluşturulamadı ❌");
+  try {
+    const res = await fetch(API.createMonthlyDues, {
+      method: "POST",
+      headers: authHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify({
+        month,
+        amount,
+        due_date,
+        type: due_type // Backend'e seçilen türü gönderiyoruz
+      })
+    });
+
+    if (res.ok) {
+      alert("✅ İşlem Başarılı! Herkese borç kaydı oluşturuldu.");
+      loadManagerDues();
+      qs("#dueCreateForm").reset(); // Formu temizle
+    } else {
+      const err = await res.json();
+      alert("Hata: " + (err.detail || "Bilinmeyen hata"));
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Sunucu hatası.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "🧾 Aidat / Ücret Oluştur";
   }
 }
 
