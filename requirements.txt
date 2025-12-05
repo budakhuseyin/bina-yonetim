@@ -1,0 +1,21 @@
+Django==5.0.6
+djangorestframework==3.15.1
+django-cors-headers==4.3.1
+PyJWT==2.8.0
+djangorestframework-simplejwt==5.3.1
+
+# PostgreSQL bağlantısı
+psycopg2-binary
+dj-database-url==2.1.0
+
+# Deployment
+gunicorn==22.0.0
+whitenoise==6.6.0
+
+# Extra libs
+pandas==2.2.2
+reportlab==4.1.0
+
+# Cloudinary (Dosya Yükleme için Yeni Eklendi)
+cloudinary>=1.36.0
+django-cloudinary-storage>=0.3.0
