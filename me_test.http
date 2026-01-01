@@ -1,0 +1,3 @@
+GET http://127.0.0.1:8000/api/me/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxNzY2MjkzLCJpYXQiOjE3NjE3NDQ2OTMsImp0aSI6ImEzMDZhZDdiMGM4ZDQxY2E4MGVkNWI4NTYwMDI5ZThkIiwidXNlcl9pZCI6IjEifQ.kRveMPGnnxAFBtHv7wOKM0N6UHO_4WeH1FcSfn4kqT4
+Content-Type: application/json

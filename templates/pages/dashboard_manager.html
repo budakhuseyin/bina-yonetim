@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Yönetici Paneli</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/css/manager.css" />
+</head>
+
+<body>
+  <!-- ===== YAN MENÜ ===== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">🏢</div>
+      <div class="brand-text">
+        <strong>BinaYönetim</strong>
+        <span>Yönetici Paneli</span>
+      </div>
+    </div>
+
+    <div class="sidebar-user-profile">
+      <div class="sidebar-user-info">
+        <div class="avatar small">YM</div>
+        <div class="info-text">
+          <strong id="mobileSidebarName">Yönetici</strong>
+          <small id="mobileSidebarMail">yonetici@site.com</small>
+        </div>
+      </div>
+      <button id="mobileLogoutBtn" class="sidebar-logout">Çıkış Yap</button>
+    </div>
+
+    <nav class="menu">
+      <button class="menu-item active" data-view="dashboard">📊 Gösterge Paneli</button>
+      <button class="menu-item" data-view="approvals">✅ Üye Onayları</button>
+      <button class="menu-item" data-view="members">👥 Üyeler</button>
+      <button class="menu-item" data-view="finances">💵 Gelir & Giderler</button>
+      <button class="menu-item" data-view="fees">🧾 Aidat Takibi</button>
+      <button class="menu-item" data-view="announcements">📣 Duyurular</button>
+      <button class="menu-item" data-view="messages">💬 Mesajlar</button>
+      <button class="menu-item" data-view="reports">📑 Raporlar</button>
+    </nav>
+  </aside>
+
+  <!-- ===== SAYFA ===== -->
+  <main class="page">
+    <header class="topbar">
+      <button id="menuToggle" class="menu-toggle">
+        ☰
+      </button>
+
+      <div class="building-badge" id="buildingBadge">Bina</div>
+      <div class="spacer"></div>
+
+      <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+      <div class="user">
+        <div class="name-mail">
+          <div class="name" id="managerNameTop">Yönetici</div>
+          <div class="mail" id="managerMailTop"></div>
+        </div>
+        <div class="avatar" id="avatarTop">YM</div>
+        <button id="logout" class="ghost">Çıkış Yap</button>
+      </div>
+    </header>
+
+    <!-- ===== GÖSTERGE PANELİ ===== -->
+    <section id="view-dashboard" class="view show">
+      <h1>Yönetici Gösterge Paneli</h1>
+      <p class="subtitle">Tekrar hoş geldiniz! Bugünkü durum özeti aşağıda.</p>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-title">Toplam Gelir (Bu Ay)</div>
+          <div class="card-value" id="cardIncome">₺0</div>
+          <div class="trend up" id="cardIncomeTrend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Toplam Gider (Bu Ay)</div>
+          <div class="card-value" id="cardExpenses">₺0</div>
+          <div class="trend down" id="cardExpensesTrend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Net Gelir</div>
+          <div class="card-value" id="cardNet">₺0</div>
+          <div class="trend up" id="cardNetTrend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Bekleyen Onaylar</div>
+          <div class="card-value" id="cardPending">0</div>
+          <a class="link" data-view-link="approvals">Yeni kayıtlar →</a>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Son Ödemeler</h3>
+          </div>
+          <div class="list" id="recentPayments"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Son Duyurular</h3>
+            <button class="ghost small" data-view-link="announcements">Tümünü Gör</button>
+          </div>
+          <div class="list" id="recentAnnouncements"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ÜYE ONAYLARI ===== -->
+    <section id="view-approvals" class="view">
+      <h1>Üye Onayları</h1>
+      <p class="subtitle">Bekleyen kayıtları onaylayın veya reddedin.</p>
+      <div id="approvalsList" class="table"></div>
+    </section>
+
+    <!-- ===== ÜYELER ===== -->
+    <section id="view-members" class="view">
+      <h1>Üyeler</h1>
+      <p class="subtitle">Binadaki tüm üyeleri görüntüleyin ve detaylarını inceleyin.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Üye Listesi</h3>
+          </div>
+          <div id="membersList" class="list"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Üye Detayları</h3>
+          </div>
+          <div id="memberDetail" class="detail-box">
+            <p class="empty">Bir üye seçin.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== GELİR & GİDERLER ===== -->
+    <section id="view-finances" class="view">
+      <h1>Gelir & Giderler</h1>
+      <p class="subtitle">Tüm mali işlemleri yönetin.</p>
+
+      <!-- ===== ÖZET KARTLAR ===== -->
+      <div class="cards finance-cards">
+        <div class="card income-card">
+          <div class="card-title">Toplam Gelir</div>
+          <div class="card-value" id="totalIncome">₺0</div>
+        </div>
+        <div class="card expense-card">
+          <div class="card-title">Toplam Gider</div>
+          <div class="card-value" id="totalExpenses">₺0</div>
+        </div>
+        <div class="card balance-card">
+          <div class="card-title">Net Bakiye</div>
+          <div class="card-value" id="netBalance">₺0</div>
+        </div>
+      </div>
+
+      <!-- ===== FORM ===== -->
+      <div class="transaction-form-box">
+        <h3>Yeni İşlem Ekle</h3>
+        <form id="transactionForm" class="transaction-form" onsubmit="return false;">
+          <select id="type" required>
+            <option value="income">Gelir</option>
+            <option value="expense">Gider</option>
+          </select>
+          <input type="text" id="category" placeholder="Kategori" required />
+          <input type="text" id="description" placeholder="Açıklama" required />
+          <input type="number" id="amount" step="0.01" placeholder="Tutar" required />
+          <label class="check">
+            <input type="checkbox" id="visibleToResidents" checked />
+            Sakinlere Göster
+          </label>
+          <button type="button" id="addTransactionBtn">+ Ekle</button>
+        </form>
+
+      </div>
+
+      <!-- ===== İŞLEM TABLOSU ===== -->
+      <div class="panel transactions-panel">
+        <div class="panel-head">
+          <h3>Tüm İşlemler</h3>
+        </div>
+
+        <table id="transactionsTable">
+          <thead>
+            <tr>
+              <th>Tarih</th>
+              <th>Tür</th>
+              <th>Kategori</th>
+              <th>Açıklama</th>
+              <th>Tutar</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== AİDAT / DUYURULAR / RAPORLAR ===== -->
+    <!-- ===== AİDAT TAKİBİ ===== -->
+    <!-- ===== AİDAT TAKİBİ ===== -->
+    <section id="view-fees" class="view">
+      <h1>🧾 Aidat Takibi</h1>
+      <p class="subtitle">Aidatları oluştur, kullanıcıların ödeme bildirimlerini onayla.</p>
+
+      <!-- ===== AİDAT OLUŞTURMA ===== -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Yeni Aidat / Ücret Oluştur (Tüm Sakinlere)</h3>
+        </div>
+
+        <form id="dueCreateForm" class="due-form" onsubmit="return false;">
+
+          <div class="due-row">
+            <label>Ay</label>
+            <input type="month" id="dueMonth" required />
+          </div>
+
+          <div class="due-row">
+            <label>Tutar (₺)</label>
+            <input type="number" id="dueAmount" step="0.01" placeholder="0.00" required />
+          </div>
+
+          <div class="due-row">
+            <label>Son Tarih</label>
+            <input type="date" id="dueDate" required />
+          </div>
+
+          <div class="due-row">
+            <label>Ücret Türü</label>
+            <select id="dueType">
+              <option value="aidat">Aidat</option>
+              <option value="bakim">Bakım Ücreti</option>
+              <option value="onarim">Onarım</option>
+              <option value="elektrik">Ortak Alan Elektrik</option>
+              <option value="ozel">Özel Ödeme</option>
+            </select>
+          </div>
+
+          <button type="button" id="createDueBtn" class="btn-due">🧾 Aidat / Ücret Oluştur</button>
+        </form>
+
+        <small class="muted">
+          Seçilen ay için binadaki tüm sakinlere toplu ödeme kaydı açılır.
+        </small>
+      </div>
+
+      <!-- ===== AİDAT LİSTESİ ===== -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Tüm Aidatlar & Ücretler</h3>
+        </div>
+
+        <table class="styled-table" id="duesTable">
+          <thead>
+            <tr>
+              <th>Kullanıcı</th>
+              <th>Ay</th>
+              <th>Tutar</th>
+              <th>Tür</th>
+              <th>Son Tarih</th>
+              <th>Durum</th>
+              <th>Ödeme Tarihi</th>
+            </tr>
+          </thead>
+          <tbody id="duesBody">
+            <tr>
+              <td colspan="7">Yükleniyor...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <!-- ===== ÖDEME BİLDİRİMLERİ ===== -->
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Ödeme Bildirimleri</h3>
+        </div>
+
+        <table class="styled-table" id="paymentNotificationsTable">
+          <thead>
+            <tr>
+              <th>Kullanıcı</th>
+              <th>Ay</th>
+              <th>Tutar</th>
+              <th>Dekont</th>
+              <th>Durum</th>
+              <th>İşlem</th>
+            </tr>
+          </thead>
+          <tbody id="paymentNotificationsBody">
+            <tr>
+              <td colspan="6">Yükleniyor...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <section id="view-announcements" class="view">
+      <h1>Duyurular</h1>
+      <p class="subtitle">Yeni duyuru ekleyin veya mevcut duyuruları görüntüleyin.</p>
+
+      <div class="panel">
+        <h3>Yeni Duyuru</h3>
+        <form id="announcementForm" onsubmit="return false;">
+          <input type="text" id="annTitle" placeholder="Başlık" required />
+          <textarea id="annMessage" placeholder="Duyuru metni" required></textarea>
+          <select id="annLevel" required>
+            <option value="high">Yüksek</option>
+            <option value="medium">Orta</option>
+            <option value="low">Düşük</option>
+          </select>
+          <button id="addAnnouncementBtn" type="button">+ Ekle</button>
+        </form>
+      </div>
+
+      <!-- DUYURU SEKMELERİ -->
+      <div class="msg-tabs" style="justify-content: flex-start; margin-bottom: 20px;">
+        <button id="annTabActive" class="tab-btn active">Aktif Duyurular</button>
+        <button id="annTabArchived" class="tab-btn">Arşiv</button>
+      </div>
+
+      <div class="panel">
+        <h3 id="annListTitle">Aktif Duyurular</h3>
+        <div id="announcementsList" class="list"></div>
+      </div>
+    </section>
+
+    <section id="view-messages" class="view">
+      <h1>💬 Mesajlar</h1>
+      <p class="subtitle">Sakinlerden gelen mesajları yönetin.</p>
+
+      <div class="panel" id="messagesList" style="min-height: 400px;">
+        <!-- JS ile doldurulacak -->
+      </div>
+    </section>
+
+    <section id="view-reports" class="view">
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h1 style="margin:0;">📑 Raporlar</h1>
+          <p class="subtitle" style="margin:0;">Tüm finansal ve yönetim raporlarını buradan görüntüleyin.</p>
+        </div>
+
+        <!-- TARİH FİLTRESİ -->
+        <div class="filter-box"
+          style="display:flex; gap:10px; align-items:center; background:#1e293b; padding:10px; border-radius:8px; border:1px solid #334155;">
+          <input type="date" id="filterStartDate"
+            style="padding:6px; border-radius:4px; border:1px solid #475569; background:#0f172a; color:white;">
+          <span style="color:white;">-</span>
+          <input type="date" id="filterEndDate"
+            style="padding:6px; border-radius:4px; border:1px solid #475569; background:#0f172a; color:white;">
+          <button id="filterBtn"
+            style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer;">Filtrele</button>
+        </div>
+      </div>
+
+      <!-- === ÖZET KARTLAR === -->
+      <div class="cards finance-cards">
+        <div class="card income-card">
+          <div class="card-title">Toplam Gelir</div>
+          <div class="card-value" id="reportTotalIncome">₺0</div>
+        </div>
+        <div class="card expense-card">
+          <div class="card-title">Toplam Gider</div>
+          <div class="card-value" id="reportTotalExpense">₺0</div>
+        </div>
+        <div class="card balance-card">
+          <div class="card-title">Net Bakiye</div>
+          <div class="card-value" id="reportBalance">₺0</div>
+        </div>
+
+        <!-- YENİ KARTLAR -->
+        <div class="card">
+          <div class="card-title">Tahsilat Oranı (Bu Ay)</div>
+          <div class="card-value" id="reportCollectionRate">%0</div>
+        </div>
+        <div class="card" style="border-left: 4px solid #F1C40F;">
+          <div class="card-title">Toplam Ödenmemiş Borç</div>
+          <div class="card-value" id="reportTotalDebt">₺0</div>
+        </div>
+      </div>
+
+      <!-- === GRAFİKLER === -->
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Aylık Gelir-Gider Grafiği</h3>
+          </div>
+          <canvas id="monthlyChart"></canvas>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Kategori Bazlı Dağılım</h3>
+          </div>
+          <canvas id="categoryChart"></canvas>
+        </div>
+      </div>
+
+      <!-- === DETAY TABLOSU === -->
+      <div class="panel transactions-panel">
+        <div class="panel-head">
+          <h3>Detaylı İşlem Listesi</h3>
+          <div class="export-buttons">
+            <button id="exportCSV">CSV İndir</button>
+            <button id="exportPDF">PDF İndir</button>
+          </div>
+        </div>
+        <table id="reportTable">
+          <thead>
+            <tr>
+              <th>Tarih</th>
+              <th>Tür</th>
+              <th>Kategori</th>
+              <th>Açıklama</th>
+              <th>Tutar</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Grafik kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PDF Kütüphanesi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="/static/js/raporlar.js"></script>
+
+    <!-- PROFIL DÜZENLEME MODALI (MANAGER) -->
+    <div id="profileModal" class="modal hidden">
+      <div class="modal-card">
+        <h3>Yönetici Profilini Düzenle</h3>
+        <p class="modal-subtitle">Bilgilerinizi güncelleyebilirsiniz.</p>
+
+        <div class="form-group">
+          <label>Ad</label>
+          <input type="text" id="editName" />
+        </div>
+        <div class="form-group">
+          <label>Soyad</label>
+          <input type="text" id="editSurname" />
+        </div>
+        <div class="form-group">
+          <label>E-posta</label>
+          <input type="email" id="editEmail" />
+        </div>
+        <div class="form-group">
+          <label>Telefon</label>
+          <input type="tel" id="editPhone" />
+        </div>
+
+        <div class="modal-actions">
+          <button id="saveProfileBtn">Kaydet</button>
+          <button id="closeProfileBtn" class="ghost">İptal</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="/static/js/dashboard_manager.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giriş Yap | ApartmentHub</title>
+  
+  <!-- CSS Dosya Yolu: Senin istediğin gibi aut.css -->
+  <link rel="stylesheet" href="/static/css/aut.css" />
+  
+  <!-- İkonlar (FontAwesome) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Ana Kapsayıcı: Form ve Bilgi Kartını yan yana tutar -->
+  <div class="login-wrapper">
+
+    <!-- SOL KART: Giriş Formu -->
+    <div class="auth-card">
+      <div class="logo">
+        <!-- Resim yoksa gizlenir ve alttaki ikon görünür -->
+        <img src="/static/img/building-icon.png" alt="logo" onerror="this.style.display='none'; document.getElementById('fallback-icon').style.display='inline-block';">
+        <i class="fa-solid fa-building-user fa-3x" style="color:#4f46e5; margin-bottom:10px; display:none;" id="fallback-icon"></i>
+      </div>
+      <h2>Hoşgeldiniz 👋</h2>
+      <p class="subtitle">Hesabınıza giriş yapın</p>
+
+      <form id="loginForm">
+        <div class="input-group">
+          <input type="email" id="email" placeholder="E-posta" required>
+        </div>
+        <div class="input-group">
+          <input type="password" id="password" placeholder="Şifre" required>
+        </div>
+        <button type="submit" class="btn-primary">Giriş Yap</button>
+        <p id="message" class="message"></p>
+      </form>
+
+      <p class="switch-text">Hesabın yok mu?
+        <a href="/register/">Kayıt Ol</a>
+      </p>
+    </div>
+
+    <!-- SAĞ KART: Demo Bilgileri (Yönetici & Bina Sakini) -->
+    <div class="info-card">
+      <div class="info-header">
+        <h3><i class="fa-solid fa-circle-info"></i> Demo Bilgileri</h3>
+      </div>
+
+      <!-- Yönetici Bölümü -->
+      <div class="role-box">
+        <div class="role-title"><i class="fa-solid fa-user-tie"></i> Yönetici Girişi</div>
+        <!-- Tıklayınca Kopyalar -->
+        <div class="credential-item" onclick="copyToClipboard('test@sultanmesud.com', 'email')">
+          <span>Kullanıcı:</span> <b>test@sultanmesud.com</b>
+        </div>
+        <div class="credential-item" onclick="copyToClipboard('test', 'password')">
+          <span>Şifre:</span> <b>test</b>
+        </div>
+      </div>
+
+      <!-- Bina Sakini Bölümü -->
+      <div class="role-box">
+        <div class="role-title"><i class="fa-solid fa-user"></i> Bina Sakini Girişi</div>
+        <!-- Tıklayınca Kopyalar -->
+        <div class="credential-item" onclick="copyToClipboard('sakin@sultanmesud.com', 'email')">
+          <span>Kullanıcı:</span> <b>sakin@sultanmesud.com</b>
+        </div>
+        <div class="credential-item" onclick="copyToClipboard('test', 'password')">
+          <span>Şifre:</span> <b>test</b>
+        </div>
+      </div>
+
+      <p class="hint">Bilgileri kopyalamak için üzerine tıklayın.</p>
+    </div>
+
+  </div>
+
+  <!-- Kopyalama İşlevi Scripti -->
+  <script>
+    function copyToClipboard(text, targetId) {
+      navigator.clipboard.writeText(text).then(() => {
+        // Hedef input varsa oraya yapıştır
+        if(targetId) {
+            const input = document.getElementById(targetId);
+            input.value = text;
+            
+            // Görsel efekt (Kenarlık rengi değişir)
+            const originalColor = input.style.borderColor;
+            input.style.borderColor = '#4f46e5';
+            setTimeout(() => input.style.borderColor = originalColor, 500);
+        }
+      });
+    }
+  </script>
+
+  <!-- Login JS Dosyan -->
+  <script src="/static/js/login.js"></script>
+</body>
+</html>
+
+

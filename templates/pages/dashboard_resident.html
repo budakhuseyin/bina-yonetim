@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bina Sakini Paneli - BinaYönetim</title>
+  <link rel="stylesheet" href="/static/css/dashboard_resident.css">
+</head>
+
+<body>
+  <div class="layout">
+
+    <button id="menuToggle" class="menu-toggle">☰</button>
+
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <div class="logo-icon">🏢</div>
+        <div class="logo-text">
+          <h2>BinaYönetim</h2>
+          <span>Sakin Paneli</span>
+        </div>
+      </div>
+
+      <nav>
+        <ul id="menuList">
+          <li class="active" data-page="dashboard">🏠 Ana Sayfa</li>
+          <li data-page="payments">💳 Ödemeler</li>
+          <li data-page="finances">💰 Bina Gelir &amp; Giderleri</li>
+          <li data-page="announcements">📢 Duyurular</li>
+          <li data-page="messages">💬 Mesajlar</li>
+        </ul>
+      </nav>
+
+      <button id="logout" class="logout-btn">Çıkış Yap</button>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+    </main>
+
+    <!-- PROFIL DÜZENLEME MODALI -->
+    <div id="profileModal" class="modal hidden">
+      <div class="modal-card">
+        <h3>Profili Düzenle</h3>
+        <p class="modal-subtitle">Bilgilerinizi güncelleyebilirsiniz.</p>
+
+        <div class="form-group">
+          <label>Ad</label>
+          <input type="text" id="editName" />
+        </div>
+        <div class="form-group">
+          <label>Soyad</label>
+          <input type="text" id="editSurname" />
+        </div>
+        <div class="form-group">
+          <label>E-posta</label>
+          <input type="email" id="editEmail" />
+        </div>
+        <div class="form-group">
+          <label>Telefon</label>
+          <input type="tel" id="editPhone" />
+        </div>
+
+        <div class="modal-actions">
+          <button id="saveProfileBtn">Kaydet</button>
+          <button id="closeProfileBtn" class="ghost">İptal</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/static/js/dashboard_resident.js"></script>
+</body>
+
+</html>

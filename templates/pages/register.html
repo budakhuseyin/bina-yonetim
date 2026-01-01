@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kayıt Ol | ApartmentHub</title>
+  <link rel="stylesheet" href="/static/css/aut.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="logo">
+        <img src="/static/img/building-icon.png" alt="logo">
+      </div>
+      <h2>Yeni Hesap Oluştur ✨</h2>
+      <p class="subtitle">Kayıt talebiniz yönetici onayına gönderilecektir</p>
+
+      <form id="registerForm">
+        <div class="input-group">
+          <input type="text" id="first_name" placeholder="Ad" required>
+        </div>
+        <div class="input-group">
+          <input type="text" id="last_name" placeholder="Soyad" required>
+        </div>
+        <div class="input-group">
+          <input type="email" id="email" placeholder="E-posta" required>
+        </div>
+        <div class="input-group">
+            <input type="text" id="phone" placeholder="Telefon (Opsiyonel)">
+        </div>
+        <div class="input-group">
+          <input type="password" id="password" placeholder="Şifre" required>
+        </div>
+        <div class="input-group">
+          <input type="number" id="building" placeholder="Bina ID (örn: 1)" required>
+        </div>
+        <div class="input-group">
+          <input type="text" id="apartment_number" placeholder="Daire No (örn: 12)" required>
+        </div>
+        <div class="input-group">
+          <select id="role" required>
+            <option value="" disabled selected>Rol Seçin</option>
+            <option value="resident">Resident (Daire Sakini)</option>
+            <option value="manager">Manager (Yönetici)</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-primary">Kayıt Ol</button>
+        <p id="message" class="message"></p>
+      </form>
+
+      <p class="switch-text">Zaten hesabın var mı?
+        <a href="/login/">Giriş Yap</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="/static/js/register.js"></script>
+</body>
+</html>
