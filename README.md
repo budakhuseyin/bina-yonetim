@@ -2,7 +2,9 @@
 
 Modern, "Premium Dark" temalı, yönetici ve site sakinleri için geliştirilmiş, **Django** tabanlı kapsamlı bir bina yönetim platformu.
 
-![Bina Yönetim Dashboard](https://via.placeholder.com/800x400?text=Premium+Dark+Dashboard)
+eğer siteyi canlıda görmek isterseniz şu linke tıklyarak gidebilirsiniz https://bina-yonetim-ivb9.onrender.com/login/
+
+bu bir ücretsiz servis kullanmaktadır o yüzden bazı durumlarda çalışmyabilir.
 
 ## 🚀 Özellikler (Features)
 
